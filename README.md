@@ -4,9 +4,14 @@
 ## Features
 ### I. SVoice - Speak Selected Text
 The first feature in JetMeil is SVoice, which allows the user to select a piece of text and have it spoken out loud. This is particularly useful for users who prefer to listen to text instead of reading it.
-
 #### Usage
 To use the SVoice feature, simply select the text you want to hear, right-click and select "Speak Selected Text" from the context menu. The selected text will then be spoken out loud using the default text-to-speech engine on your device.
+
+## Installation
+run the command
+```shell
+make install
+```
 
 ## Future Features
 JetMeil is constantly being developed, and new features will be added in the future. Stay tuned for updates and improvements!
