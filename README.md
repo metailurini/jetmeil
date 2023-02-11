@@ -11,3 +11,5 @@ UI config
 internal source
   main register children plugin
 ```
+independent child plugin
+- [svoice](https://github.com/metailurini/svoice)
