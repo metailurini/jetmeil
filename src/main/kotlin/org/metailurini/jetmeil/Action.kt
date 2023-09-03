@@ -1,4 +1,4 @@
-package org.metailurini.jetmeil.builtin
+package org.metailurini.jetmeil
 
 import com.intellij.openapi.actionSystem.AnActionEvent
 

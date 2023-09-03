@@ -6,28 +6,21 @@ import com.intellij.openapi.util.TextRange
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import org.metailurini.jetmeil.builtin.Plugin
+import org.metailurini.jetmeil.Plugin
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.security.MessageDigest
 
 @DelicateCoroutinesApi
-class Svoice private constructor() : Plugin {
-    private object Self {
-        val INSTANCE = Svoice()
-    }
-
-    companion object {
-        @JvmStatic
-        fun getInstance(): Svoice {
-            return Self.INSTANCE
-        }
-    }
+class Svoice(private var svoiceRepo: SvoiceRepository) : Plugin {
+    private lateinit var tmpDir: Path
+    private var now = System.currentTimeMillis()
 
     override fun actionPerformed(event: AnActionEvent) {
         val selectedText = this.getText(event) ?: return
-        val internal = InternalSvoice()
+
+        println("@ now $now")
 
         val tmpDir = this.getTmpDir()
         val soundName = Paths.get(tmpDir.toString(), this.hashString(selectedText))
@@ -35,15 +28,12 @@ class Svoice private constructor() : Plugin {
         GlobalScope.launch {
             val listFileName = tmpDir.toFile().listFiles()!!.map { f -> f.absolutePath }
             if (listFileName.indexOf(soundName.toAbsolutePath().toString()) == -1) {
-                internal.downloadVoiceAudio(selectedText, soundName)
+                svoiceRepo.downloadVoiceAudio(selectedText, soundName)
             }
 
-            internal.playAudio(soundName)
+            svoiceRepo.playAudio(soundName)
         }
     }
-
-
-    private lateinit var tmpDir: Path
 
     private fun getTmpDir(): Path {
         if (!this::tmpDir.isInitialized) {

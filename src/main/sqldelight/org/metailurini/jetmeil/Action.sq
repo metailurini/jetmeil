@@ -1,0 +1,61 @@
+-- group bookmark
+
+UpdateGroupName:
+UPDATE bookmark
+SET group_name = ?
+WHERE EXISTS (
+	SELECT 1
+	FROM bookmark temp_book_mark
+	WHERE
+        temp_book_mark.project_id = bookmark.project_id AND
+        temp_book_mark.group_name = bookmark.group_name AND
+
+        temp_book_mark.project_id = ? AND
+        temp_book_mark.file_path = ? AND
+        temp_book_mark.line_number = ?
+);
+
+
+RemoveByGroupName:
+DELETE FROM bookmark
+WHERE group_name = ?;
+
+
+-- bookmark
+
+GetProjectByPath:
+SELECT *
+FROM project
+WHERE project_path = ?;
+
+
+UpsertBookmark:
+INSERT INTO bookmark (project_id, group_name, description, file_path, line_number, commit_id)
+VALUES (?, ?, ?, ?, ?, ?)
+ON CONFLICT (project_id, file_path, line_number) DO UPDATE
+SET group_name = excluded.group_name,
+    description = excluded.description,
+    commit_id = excluded.commit_id;
+
+
+UpsertBookmarkWithoutCommitID:
+INSERT INTO bookmark (project_id, group_name, description, file_path, line_number, commit_id)
+VALUES (?, ?, ?, ?, ?, ?)
+ON CONFLICT (project_id, file_path, line_number) DO UPDATE
+SET group_name = excluded.group_name,
+    description = excluded.description;
+
+
+UpsertProject:
+INSERT INTO project (project_id, project_path, github_link)
+VALUES (?, ?, ?)
+ON CONFLICT (project_id) DO UPDATE
+SET project_path = excluded.project_path,
+    github_link = excluded.github_link;
+
+
+DeletedBookmark:
+DELETE FROM bookmark
+WHERE project_id = ? AND
+      file_path = ? AND
+      line_number = ?;

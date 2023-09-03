@@ -3,15 +3,16 @@ package org.metailurini.jetmeil.plugins.svoice
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.intellij.util.io.DataOutputStream
+import org.metailurini.jetmeil.common.Utils
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
-import java.net.URL
+import java.net.URI
 import java.nio.file.Files
 import java.nio.file.Path
 import java.util.*
 
-internal class InternalSvoice {
+class SvoiceRepositoryImpl : SvoiceRepository {
     private fun requestBody(text: String): JsonObject {
         val jsonObject = JsonParser.parseString(
             """
@@ -31,11 +32,11 @@ internal class InternalSvoice {
         return jsonObject
     }
 
-    fun downloadVoiceAudio(text: String, path: Path) {
+    override fun downloadVoiceAudio(text: String, path: Path) {
         val textData = this.requestBody(text).toString()
 
         with(
-            URL("https://audio.api.speechify.dev/generateAudioFiles").openConnection() as HttpURLConnection
+            URI("https://audio.api.speechify.dev/generateAudioFiles").toURL().openConnection() as HttpURLConnection
         ) {
             requestMethod = "POST"
             setRequestProperty("authority", "audio.api.speechify.dev")
@@ -70,19 +71,16 @@ internal class InternalSvoice {
         }
     }
 
-    fun playAudio(path: Path) {
-        println("run command $path")
-        val processBuilder = ProcessBuilder(
-            "/usr/bin/cvlc",
-            "--play-and-exit",
-            path.toAbsolutePath().toString(),
+    override fun playAudio(audioPath: Path) {
+        println("run command $audioPath")
+        Utils.run(
+            arrayOf(
+                "/usr/bin/cvlc",
+                "--play-and-exit",
+                "--no-repeat",
+                "--no-loop",
+                audioPath.toAbsolutePath().toString()
+            )
         )
-        val process = processBuilder.start()
-        val inputStreamReader = InputStreamReader(process.inputStream)
-        val bufferedReader = BufferedReader(inputStreamReader)
-        var line: String?
-        while (bufferedReader.readLine().also { line = it } != null) {
-            println(line)
-        }
     }
 }

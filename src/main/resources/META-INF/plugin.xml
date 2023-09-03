@@ -13,7 +13,8 @@
     <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
          Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
          Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
-    <description><![CDATA[Description of the plugin displayed on the Plugin Page and IDE Plugin Manager. ]]></description>
+    <description>
+        <![CDATA[Description of the plugin displayed on the Plugin Page and IDE Plugin Manager. ]]></description>
 
     <!-- Product and plugin compatibility requirements.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
@@ -22,8 +23,14 @@
     <!-- Extension points defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
-
     </extensions>
+    <projectListeners>
+        <listener class="org.metailurini.jetmeil.Main$JetmeilBookMarks"
+                  topic="com.intellij.ide.bookmark.BookmarksListener"/>
+
+        <listener class="org.metailurini.jetmeil.Main$JetmeilProjectManager"
+                  topic="com.intellij.openapi.project.ProjectManagerListener"/>
+    </projectListeners>
     <actions>
         <group id="org.metailurini.jetmeil" text="Jetmeil" description="Jetmeil">
             <add-to-group group-id="MainMenu" anchor="last"/>
