@@ -3,6 +3,7 @@ package org.metailurini.jetmeil.adapter.repository
 import com.squareup.sqldelight.Query
 import com.squareup.sqldelight.TransactionWithReturn
 import com.squareup.sqldelight.TransactionWithoutReturn
+import org.metailurini.jetmeil.Bookmark
 import org.metailurini.jetmeil.BookmarkQueries
 import org.metailurini.jetmeil.Project
 
@@ -34,12 +35,25 @@ class BookmarkRepositoryImpl(private var origin: BookmarkQueries) : BookmarkRepo
         return origin.GetProject()
     }
 
+    override fun <T : Any> GetBookmarkByKey(
+        project_id: Long,
+        file_path: String,
+        line_number: Long,
+        mapper: (project_id: Long, group_name: String, description: String?, file_path: String, line_number: Long, commit_id: String) -> T
+    ): Query<T> {
+        return origin.GetBookmarkByKey(project_id, file_path, line_number, mapper)
+    }
+
+    override fun GetBookmarkByKey(project_id: Long, file_path: String, line_number: Long): Query<Bookmark> {
+        return origin.GetBookmarkByKey(project_id, file_path, line_number)
+    }
+
     override fun UpdateGroupName(group_name: String, project_id: Long, file_path: String, line_number: Long) {
         origin.UpdateGroupName(group_name, project_id, file_path, line_number)
     }
 
-    override fun RemoveByGroupName(group_name: String) {
-        origin.RemoveByGroupName(group_name)
+    override fun RemoveByGroupName(project_id: Long, group_name: String) {
+        origin.RemoveByGroupName(project_id, group_name)
     }
 
     override fun UpsertBookmark(

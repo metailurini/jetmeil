@@ -34,7 +34,14 @@ open class BookmarksListener(
     }
 
     override fun groupRemoved(group: BookmarkGroup) {
-        bookmarkRepo.RemoveByGroupName(group.name)
+        val bookmarks = group.getBookmarks()
+        if (bookmarks.isEmpty()) {
+            return
+        }
+        val bookmark = bookmarks[0]
+        val groupName = group.name
+        val projectID = getProjectByBookmark(bookmark).project_id
+        bookmarkRepo.RemoveByGroupName(projectID, groupName)
     }
 
     override fun bookmarkAdded(group: BookmarkGroup, bookmark: Bookmark) {
@@ -75,7 +82,7 @@ open class BookmarksListener(
         bookmarkRepo.DeletedBookmark(projectID, fileURL, fileLine)
     }
 
-    internal fun getProjectByBookmark(bookmark: Bookmark): Project {
+    fun getProjectByBookmark(bookmark: Bookmark): Project {
         val filteredProjects = projects.filter { it.project_path == bookmark.provider.project.basePath }
         if (filteredProjects.isEmpty()) {
             throw Exception(PROJECT_NOT_FOUND)

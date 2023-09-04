@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "org.metailurini"
-version = "2.1"
+version = "2.1.1"
 
 repositories {
     mavenCentral()
@@ -18,6 +18,9 @@ dependencies {
     implementation("org.xerial:sqlite-jdbc:3.41.2.2")
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
     testImplementation("org.mockito.kotlin:mockito-kotlin:5.1.0")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
 }
 
 intellij {

@@ -115,13 +115,13 @@ class BookmarksListenerTest : TestCase() {
 
     fun testGroupRemoved() {
         val (db, projects) = setupMock()
-        val group = mock<BookmarkGroup>()
+        val (group, _) = setupMockForGettingProject()
 
         whenever(group.name).thenReturn("group")
 
         BookmarksListener(db, mock(), projects).groupRemoved(group)
 
-        verify(db).RemoveByGroupName(group.name)
+        verify(db).RemoveByGroupName(1, group.name)
     }
 
     fun testBookmarkAdded() {

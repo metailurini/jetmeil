@@ -20,6 +20,27 @@ CREATE TABLE bookmark
 );
 
 
+-- project
+
+GetProjectByPath:
+SELECT *
+FROM project
+WHERE project_path = ?;
+
+
+GetProject:
+SELECT *
+FROM project;
+
+
+UpsertProject:
+INSERT INTO project (project_id, project_path, github_link)
+VALUES (?, ?, ?)
+ON CONFLICT (project_id) DO UPDATE
+SET project_path = excluded.project_path,
+    github_link = excluded.github_link;
+
+
 -- group bookmark
 
 UpdateGroupName:
@@ -40,20 +61,19 @@ WHERE EXISTS (
 
 RemoveByGroupName:
 DELETE FROM bookmark
-WHERE group_name = ?;
+WHERE
+    project_id = ? AND
+    group_name = ?;
 
 
 -- bookmark
 
-GetProjectByPath:
-SELECT *
-FROM project
-WHERE project_path = ?;
-
-
-GetProject:
-SELECT *
-FROM project;
+GetBookmarkByKey:
+SELECT * FROM bookmark
+WHERE
+     project_id = ? AND
+     file_path = ? AND
+     line_number = ?;
 
 
 UpsertBookmark:
@@ -71,14 +91,6 @@ VALUES (?, ?, ?, ?, ?, ?)
 ON CONFLICT (project_id, file_path, line_number) DO UPDATE
 SET group_name = excluded.group_name,
     description = excluded.description;
-
-
-UpsertProject:
-INSERT INTO project (project_id, project_path, github_link)
-VALUES (?, ?, ?)
-ON CONFLICT (project_id) DO UPDATE
-SET project_path = excluded.project_path,
-    github_link = excluded.github_link;
 
 
 DeletedBookmark:
