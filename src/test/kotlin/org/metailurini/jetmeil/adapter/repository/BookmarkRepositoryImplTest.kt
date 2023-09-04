@@ -10,7 +10,7 @@ class BookmarkRepositoryImplTest : TestCase() {
     private val tmpDBPath = "/tmp/tmp.db"
 
     override fun setUp() {
-        db = DatabaseManager("jdbc:sqlite:$tmpDBPath")
+        db = DatabaseManager(tmpDBPath)
         bookmarkRepo = BookmarkRepositoryImpl(db.getBookmarkQueries())
     }
 

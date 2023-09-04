@@ -6,7 +6,7 @@ import org.metailurini.jetmeil.BookmarkQueries
 import org.metailurini.jetmeil.Database
 import org.sqlite.SQLiteException
 
-class DatabaseManager(internal var url: String? = null) {
+class DatabaseManager(internal var dbPath: String? = null) {
     lateinit var driver: SqlDriver
     lateinit var database: Database
 
@@ -35,14 +35,14 @@ class DatabaseManager(internal var url: String? = null) {
     }
 
     private fun connectDB() {
-        url = if (url == null) {
+        dbPath = if (dbPath == null) {
             SQLITE_URL
         } else {
-            url
+            "$PREFIX_JDBC_SQLITE$dbPath"
         }
 
         Class.forName(SQLITE_CLASS)
-        driver = JdbcSqliteDriver(url!!)
+        driver = JdbcSqliteDriver(dbPath!!)
         try {
             Database.Schema.create(driver)
         } catch (e: SQLiteException) {

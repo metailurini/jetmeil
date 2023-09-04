@@ -13,14 +13,11 @@ repositories {
 }
 dependencies {
     implementation("com.google.code.gson:gson:2.10")
-    implementation("com.squareup.sqldelight:sqlite-driver:1.5.5")
     implementation("com.squareup.sqldelight:coroutines-extensions:1.5.0")
+    implementation("com.squareup.sqldelight:sqlite-driver:1.5.5")
     implementation("org.xerial:sqlite-jdbc:3.41.2.2")
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
     testImplementation("org.mockito.kotlin:mockito-kotlin:5.1.0")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
 }
 
 intellij {
