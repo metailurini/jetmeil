@@ -84,4 +84,18 @@ class MainKtTest : TestCase() {
         verify(bookmarkRepo, Mockito.times(1)).UpsertProject(null, "/test", "github.com/test")
         assertEquals(Main.projects, listOf<Project>())
     }
+
+    fun testReloadProjects() {
+        val project = Mockito.mock<com.intellij.openapi.project.Project>()
+        val bookmarkRepo = Mockito.mock<BookmarkRepository>()
+
+        val main = Main
+        main.projects = listOf(Project(1, "test", "github.com"))
+        main.bookmarkRepo = bookmarkRepo
+
+        upsertProject(project)
+        getListProjects()
+
+        verify(bookmarkRepo, Mockito.times(1)).getProjects()
+    }
 }

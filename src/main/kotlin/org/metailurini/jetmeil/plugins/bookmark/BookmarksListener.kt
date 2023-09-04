@@ -1,4 +1,4 @@
-package org.metailurini.jetmeil.plugins.listener
+package org.metailurini.jetmeil.plugins.bookmark
 
 import com.intellij.ide.bookmark.Bookmark
 import com.intellij.ide.bookmark.BookmarkGroup

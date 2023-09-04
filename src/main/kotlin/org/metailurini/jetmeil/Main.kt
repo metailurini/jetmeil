@@ -9,7 +9,7 @@ import org.metailurini.jetmeil.adapter.GitCommander
 import org.metailurini.jetmeil.adapter.GitCommanderImpl
 import org.metailurini.jetmeil.adapter.repository.BookmarkRepository
 import org.metailurini.jetmeil.adapter.repository.BookmarkRepositoryImpl
-import org.metailurini.jetmeil.plugins.listener.BookmarksListener
+import org.metailurini.jetmeil.plugins.bookmark.BookmarksListener
 import org.metailurini.jetmeil.plugins.svoice.Svoice
 import org.metailurini.jetmeil.plugins.svoice.SvoiceRepositoryImpl
 import org.metailurini.jetmeil.Project as JetmeilProject

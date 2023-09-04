@@ -1,4 +1,4 @@
-package org.metailurini.jetmeil.plugins.listener
+package org.metailurini.jetmeil.plugins.bookmark
 
 import com.intellij.ide.bookmark.Bookmark
 import com.intellij.ide.bookmark.BookmarkGroup
@@ -9,7 +9,7 @@ import junit.framework.TestCase
 import org.metailurini.jetmeil.Project
 import org.metailurini.jetmeil.adapter.GitCommander
 import org.metailurini.jetmeil.adapter.repository.BookmarkRepository
-import org.metailurini.jetmeil.plugins.listener.BookmarksListener.Companion.PROJECT_NOT_FOUND
+import org.metailurini.jetmeil.plugins.bookmark.BookmarksListener.Companion.PROJECT_NOT_FOUND
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyNoInteractions

@@ -22,7 +22,7 @@ dependencies {
 
 intellij {
     version.set("2023.2.1")
-    type.set("IC") // Target IDE Platform
+    type.set("IC")
 
     plugins.set(listOf())
 }
