@@ -20,7 +20,7 @@ class DatabaseManager private constructor() {
         private const val SQLITE_CLASS = "org.sqlite.JDBC"
         private const val CREATED_TABLE_MSG = "already exists"
 
-        fun getInstance(): DatabaseManager {
+        private fun getInstance(): DatabaseManager {
             return instance ?: synchronized(this) {
                 instance ?: DatabaseManager().also { instance = it }
             }

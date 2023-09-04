@@ -5,24 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="619a0193-8bbd-4685-9cb0-93afde01bec6" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/org/metailurini/jetmeil/adapter/GitCommanderImplTest.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/org/metailurini/jetmeil/common/Utils.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/org/metailurini/jetmeil/common/UtilsTest.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/org/metailurini/jetmeil/plugins/listener/BookmarksListener.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/org/metailurini/jetmeil/plugins/listener/BookmarksListenerTest.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/kotlin/org/metailurini/jetmeil/plugins/svoice/SvoiceRepository.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/sqldelight/org/metailurini/jetmeil/Action.sq" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/uiDesigner.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/kotlinc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/kotlinc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/org/metailurini/jetmeil/Main.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/org/metailurini/jetmeil/Main.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/org/metailurini/jetmeil/builtin/Action.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/org/metailurini/jetmeil/Action.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/kotlin/org/metailurini/jetmeil/plugins/svoice/InternalSvoice.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/org/metailurini/jetmeil/plugins/svoice/SvoiceRepositoryImpl.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/org/metailurini/jetmeil/adapter/DatabaseManager.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/org/metailurini/jetmeil/adapter/DatabaseManager.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/org/metailurini/jetmeil/plugins/listener/BookmarksListener.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/org/metailurini/jetmeil/plugins/listener/BookmarksListener.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/kotlin/org/metailurini/jetmeil/plugins/listener/BookmarksListenerTest.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/org/metailurini/jetmeil/plugins/listener/BookmarksListenerTest.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/kotlin/org/metailurini/jetmeil/plugins/svoice/Svoice.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/kotlin/org/metailurini/jetmeil/plugins/svoice/Svoice.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/META-INF/plugin.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/META-INF/plugin.xml" afterDir="false" />
     </list>
@@ -68,6 +58,12 @@
     <setting file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.jetbrains.intellij.idea/ideaIC/2022.1.4/405ffbaf69811ed0672e76d7ca9a07c80ba9121d/ideaIC-2022.1.4-sources.jar!/com/intellij/ide/bookmark/BookmarkGroup.kt" root0="SKIP_INSPECTION" />
     <setting file="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.mockito.kotlin/mockito-kotlin/3.2.0/7aa636627611c6eeaa32e78b586a4076f3d2201a/mockito-kotlin-3.2.0-sources.jar!/org/mockito/kotlin/Verification.kt" root0="SKIP_INSPECTION" />
   </component>
+  <component name="KotlinScriptingSettings">
+    <scriptDefinition className="org.jetbrains.kotlin.scripting.resolve.KotlinScriptDefinitionFromAnnotatedTemplate" definitionName="KotlinBuildScript">
+      <order>2147483647</order>
+      <autoReloadConfigurations>true</autoReloadConfigurations>
+    </scriptDefinition>
+  </component>
   <component name="MacroExpansionManager">
     <option name="directoryName" value="cwko13ba" />
   </component>
@@ -94,6 +90,7 @@
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;ToolWindowGit.ShowToolbar&quot;: &quot;false&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;code.cleanup.on.save&quot;: &quot;true&quot;,
     &quot;com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary&quot;: &quot;JUnit5&quot;,
@@ -101,11 +98,15 @@
     &quot;git-widget-placeholder&quot;: &quot;master&quot;,
     &quot;last.edited.regexp&quot;: &quot;Sample Text&quot;,
     &quot;last_directory_selection&quot;: &quot;/home/shanenoi/w/_mt/jetmeil/src/main/kotlin/org/metailurini/jetmeil&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/shanenoi/w/_mt/jetmeil/build/distributions/jetmeil-2.0.zip&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
     &quot;rearrange.code.on.save&quot;: &quot;true&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
@@ -137,6 +138,8 @@
   <component name="RunAnythingCache">
     <option name="myCommands">
       <command value="gradle :generateSqlDelightInterface" />
+      <command value="gradle buildPlugin" />
+      <command value="gradle :buildDependents" />
       <command value="gradle :runIde" />
     </option>
   </component>
@@ -163,48 +166,48 @@
       <RunAsTest>false</RunAsTest>
       <method v="2" />
     </configuration>
-    <configuration name="GitCommanderImplTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="BookmarksListenerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="jetmeil.main" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="org.metailurini.jetmeil.adapter.*" />
+          <option name="PATTERN" value="org.metailurini.jetmeil.plugins.listener.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="org.metailurini.jetmeil.adapter" />
-      <option name="MAIN_CLASS_NAME" value="org.metailurini.jetmeil.adapter.GitCommanderImplTest" />
+      <option name="PACKAGE_NAME" value="org.metailurini.jetmeil.plugins.listener" />
+      <option name="MAIN_CLASS_NAME" value="org.metailurini.jetmeil.plugins.listener.BookmarksListenerTest" />
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="GitCommanderImplTest.testExtractGitRemoteURL" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="BookmarksListenerTest.testGroupRemoved" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="jetmeil.main" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="org.metailurini.jetmeil.adapter.*" />
+          <option name="PATTERN" value="org.metailurini.jetmeil.plugins.listener.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="org.metailurini.jetmeil.adapter" />
-      <option name="MAIN_CLASS_NAME" value="org.metailurini.jetmeil.adapter.GitCommanderImplTest" />
-      <option name="METHOD_NAME" value="testExtractGitRemoteURL" />
+      <option name="PACKAGE_NAME" value="org.metailurini.jetmeil.plugins.listener" />
+      <option name="MAIN_CLASS_NAME" value="org.metailurini.jetmeil.plugins.listener.BookmarksListenerTest" />
+      <option name="METHOD_NAME" value="testGroupRemoved" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="GitCommanderImplTest.testGetRemoteURL" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+    <configuration name="BookmarksListenerTest.testGroupRenamed" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="jetmeil.main" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="org.metailurini.jetmeil.adapter.*" />
+          <option name="PATTERN" value="org.metailurini.jetmeil.plugins.listener.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
-      <option name="PACKAGE_NAME" value="org.metailurini.jetmeil.adapter" />
-      <option name="MAIN_CLASS_NAME" value="org.metailurini.jetmeil.adapter.GitCommanderImplTest" />
-      <option name="METHOD_NAME" value="testGetRemoteURL" />
+      <option name="PACKAGE_NAME" value="org.metailurini.jetmeil.plugins.listener" />
+      <option name="MAIN_CLASS_NAME" value="org.metailurini.jetmeil.plugins.listener.BookmarksListenerTest" />
+      <option name="METHOD_NAME" value="testGroupRenamed" />
       <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -229,10 +232,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="Gradle.jetmeil [:runIde]" />
+        <item itemvalue="JUnit.BookmarksListenerTest.testGroupRenamed" />
+        <item itemvalue="JUnit.BookmarksListenerTest.testGroupRemoved" />
+        <item itemvalue="JUnit.BookmarksListenerTest" />
         <item itemvalue="JUnit.MainKtTest.testLoadExistingProject" />
-        <item itemvalue="JUnit.GitCommanderImplTest" />
-        <item itemvalue="JUnit.GitCommanderImplTest.testGetRemoteURL" />
-        <item itemvalue="JUnit.GitCommanderImplTest.testExtractGitRemoteURL" />
       </list>
     </recent_temporary>
   </component>
@@ -248,12 +251,39 @@
       <workItem from="1693726989635" duration="5528000" />
       <workItem from="1693733555725" duration="1595000" />
       <workItem from="1693735159768" duration="9682000" />
-      <workItem from="1693750073190" duration="218000" />
+      <workItem from="1693750073190" duration="4414000" />
+      <workItem from="1693785948177" duration="1073000" />
+      <workItem from="1693787147136" duration="651000" />
+      <workItem from="1693787821380" duration="3212000" />
+      <workItem from="1693791099200" duration="194000" />
+      <workItem from="1693791309544" duration="361000" />
+      <workItem from="1693791686905" duration="71000" />
+      <workItem from="1693791778329" duration="203000" />
+      <workItem from="1693791998504" duration="2245000" />
+      <workItem from="1693794262592" duration="43000" />
+      <workItem from="1693794323199" duration="668000" />
+      <workItem from="1693795008776" duration="83000" />
+      <workItem from="1693795110679" duration="3217000" />
+      <workItem from="1693798345854" duration="26000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="LOCAL_CHANGES_DETAILS_PREVIEW_SHOWN" value="false" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

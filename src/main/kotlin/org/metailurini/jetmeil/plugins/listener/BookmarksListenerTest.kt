@@ -8,6 +8,7 @@ import com.intellij.openapi.project.Project
 import groovy.lang.Tuple4
 import junit.framework.TestCase
 import org.metailurini.jetmeil.ActionQueries
+import org.metailurini.jetmeil.Main
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.verifyZeroInteractions
@@ -82,7 +83,7 @@ class BookmarksListenerTest : TestCase() {
         whenever(group.getBookmarks()).thenReturn(listOf(bookMark))
         whenever(bookMark.attributes).thenReturn(mapOf("url" to "fn", "line" to "42"))
 
-        BookmarksListener(db, project).groupRenamed(group)
+        BookmarksListener(db, Main.gitter, project).groupRenamed(group)
 
         verify(db).UpdateGroupName(group.name, project.project_id, "fn", 43)
     }
@@ -93,7 +94,7 @@ class BookmarksListenerTest : TestCase() {
 
         whenever(group.name).thenReturn("group")
 
-        BookmarksListener(db, project).groupRemoved(group)
+        BookmarksListener(db, Main.gitter, project).groupRemoved(group)
 
         verify(db).RemoveByGroupName(group.name)
     }
@@ -155,7 +156,7 @@ class BookmarksListenerTest : TestCase() {
             val (mock, verify) = testCase.setup()
             println("Running test case: $testName")
 
-            BookmarksListener(mock.v1, mock.v2).bookmarkAdded(mock.v3, mock.v4)
+            BookmarksListener(mock.v1, Main.gitter, mock.v2).bookmarkAdded(mock.v3, mock.v4)
 
             verify()
         }
@@ -209,7 +210,7 @@ class BookmarksListenerTest : TestCase() {
             val (mock, verify) = testCase.setup()
             println("Running test case: $testName")
 
-            BookmarksListener(mock.v1, mock.v2).bookmarkChanged(mock.v3, mock.v4)
+            BookmarksListener(mock.v1, Main.gitter, mock.v2).bookmarkChanged(mock.v3, mock.v4)
 
             verify()
         }
@@ -250,7 +251,7 @@ class BookmarksListenerTest : TestCase() {
             val (mock, verify) = testCase.setup()
             println("Running test case: $testName")
 
-            BookmarksListener(mock.v1, mock.v2).bookmarkRemoved(mock.v3, mock.v4)
+            BookmarksListener(mock.v1, Main.gitter, mock.v2).bookmarkRemoved(mock.v3, mock.v4)
 
             verify()
         }

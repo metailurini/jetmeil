@@ -3,8 +3,7 @@ package org.metailurini.jetmeil
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.project.Project
-import com.intellij.openapi.project.ProjectManagerListener
-import kotlinx.coroutines.DelicateCoroutinesApi
+import com.intellij.openapi.startup.ProjectActivity
 import org.metailurini.jetmeil.adapter.DatabaseManager
 import org.metailurini.jetmeil.adapter.GitCommander
 import org.metailurini.jetmeil.adapter.GitCommanderImpl
@@ -18,25 +17,23 @@ val ProjectNotFound = Exception("project not found")
 
 class Main {
     companion object {
-        @OptIn(DelicateCoroutinesApi::class)
         var svoice = Svoice(SvoiceRepositoryImpl())
         var gitter = GitCommanderImpl()
         var database = DatabaseManager.getActionQueries()
-
-        lateinit var jetmeilProject: JetmeilProject
+        var jetmeilProject: JetmeilProject? = null
     }
 
-    class JetmeilBookMarks : BookmarksListener(database, jetmeilProject)
+    class JetmeilBookMarks : BookmarksListener(database, gitter, jetmeilProject)
 
-    class JetmeilProjectManager : ProjectManagerListener {
-        override fun projectOpened(project: Project) {
+    class JetmeilPostStartupActivity : ProjectActivity {
+        override suspend fun execute(project: Project) {
             val basePath = project.basePath ?: return
-            jetmeilProject = loadProject(database, gitter, basePath)
+            loadProject(database, gitter, basePath)
         }
     }
 
+
     class SvoiceAction : AnAction() {
-        @OptIn(DelicateCoroutinesApi::class)
         override fun actionPerformed(event: AnActionEvent) {
             try {
                 svoice.actionPerformed(event)
@@ -49,7 +46,11 @@ class Main {
 
 private operator fun Any.component0() {}
 
-internal fun loadProject(database: ActionQueries, gitter: GitCommander, projectPath: String): JetmeilProject {
+internal fun loadProject(
+    database: ActionQueries,
+    gitter: GitCommander,
+    projectPath: String
+): org.metailurini.jetmeil.Project? {
     var projectID: Long? = null
 
     var project = database.GetProjectByPath(projectPath).executeAsOneOrNull()
@@ -69,7 +70,8 @@ internal fun loadProject(database: ActionQueries, gitter: GitCommander, projectP
         throw ProjectNotFound
     }
 
-    return project
+    Main.jetmeilProject = project
+    return Main.jetmeilProject
 }
 
 /*

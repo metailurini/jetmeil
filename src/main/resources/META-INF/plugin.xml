@@ -8,7 +8,7 @@
     <name>Jetmeil</name>
 
     <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
-    <vendor email="support@metailurini.org" url="https://www.yourcompany.com">YourCompan</vendor>
+    <vendor email="metailurini.org@gmail.com" url="https://github.com/metailurini">Metailurini</vendor>
 
     <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
          Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
@@ -23,13 +23,12 @@
     <!-- Extension points defined by the plugin.
          Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
     <extensions defaultExtensionNs="com.intellij">
+        <postStartupActivity implementation="org.metailurini.jetmeil.Main$JetmeilPostStartupActivity"/>
+        <backgroundPostStartupActivity implementation="org.metailurini.jetmeil.Main$JetmeilPostStartupActivity"/>
     </extensions>
     <projectListeners>
         <listener class="org.metailurini.jetmeil.Main$JetmeilBookMarks"
                   topic="com.intellij.ide.bookmark.BookmarksListener"/>
-
-        <listener class="org.metailurini.jetmeil.Main$JetmeilProjectManager"
-                  topic="com.intellij.openapi.project.ProjectManagerListener"/>
     </projectListeners>
     <actions>
         <group id="org.metailurini.jetmeil" text="Jetmeil" description="Jetmeil">

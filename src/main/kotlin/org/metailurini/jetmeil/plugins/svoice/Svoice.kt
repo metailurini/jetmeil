@@ -3,29 +3,22 @@ package org.metailurini.jetmeil.plugins.svoice
 import com.intellij.openapi.actionSystem.AnActionEvent
 import com.intellij.openapi.actionSystem.CommonDataKeys
 import com.intellij.openapi.util.TextRange
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import org.jetbrains.concurrency.runAsync
 import org.metailurini.jetmeil.Plugin
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
 import java.security.MessageDigest
 
-@DelicateCoroutinesApi
 class Svoice(private var svoiceRepo: SvoiceRepository) : Plugin {
     private lateinit var tmpDir: Path
-    private var now = System.currentTimeMillis()
 
     override fun actionPerformed(event: AnActionEvent) {
         val selectedText = this.getText(event) ?: return
-
-        println("@ now $now")
-
         val tmpDir = this.getTmpDir()
         val soundName = Paths.get(tmpDir.toString(), this.hashString(selectedText))
 
-        GlobalScope.launch {
+        runAsync {
             val listFileName = tmpDir.toFile().listFiles()!!.map { f -> f.absolutePath }
             if (listFileName.indexOf(soundName.toAbsolutePath().toString()) == -1) {
                 svoiceRepo.downloadVoiceAudio(selectedText, soundName)

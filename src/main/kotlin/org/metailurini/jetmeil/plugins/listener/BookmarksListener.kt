@@ -3,12 +3,29 @@ package org.metailurini.jetmeil.plugins.listener
 import com.intellij.ide.bookmark.Bookmark
 import com.intellij.ide.bookmark.BookmarkGroup
 import com.intellij.ide.bookmark.BookmarksListener
+import com.intellij.openapi.project.ProjectManager
 import org.metailurini.jetmeil.ActionQueries
 import org.metailurini.jetmeil.Project
+import org.metailurini.jetmeil.adapter.GitCommander
 import org.metailurini.jetmeil.common.Utils
+import org.metailurini.jetmeil.loadProject
 
-open class BookmarksListener(private var db: ActionQueries, private var project: Project) :
+open class BookmarksListener(
+    private var db: ActionQueries,
+    private var gitter: GitCommander,
+    private var initProject: Project?
+) :
     BookmarksListener {
+    private val project: Project
+
+    init {
+        if (initProject == null) {
+            ProjectManager.getInstance().openProjects[0].basePath?.let {
+                initProject = loadProject(db, gitter, it)
+            }
+        }
+        project = initProject as Project
+    }
 
     override fun groupRenamed(group: BookmarkGroup) {
         val bookmarks = group.getBookmarks()
