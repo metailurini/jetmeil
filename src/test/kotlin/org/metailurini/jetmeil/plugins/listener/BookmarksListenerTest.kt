@@ -4,16 +4,16 @@ import com.intellij.ide.bookmark.Bookmark
 import com.intellij.ide.bookmark.BookmarkGroup
 import com.intellij.ide.bookmark.BookmarkProvider
 import com.intellij.ide.util.treeView.AbstractTreeNode
-import com.intellij.openapi.project.Project
-import groovy.lang.Tuple4
+import groovy.lang.Tuple5
 import junit.framework.TestCase
-import org.metailurini.jetmeil.ActionQueries
-import org.metailurini.jetmeil.Main
+import org.metailurini.jetmeil.Project
+import org.metailurini.jetmeil.adapter.GitCommander
+import org.metailurini.jetmeil.adapter.repository.BookmarkRepository
+import org.metailurini.jetmeil.plugins.listener.BookmarksListener.Companion.PROJECT_NOT_FOUND
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyZeroInteractions
+import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
-import org.metailurini.jetmeil.Project as JetmeilProject
 
 private class MockBookmarkProvider : BookmarkProvider {
     override fun compare(p0: Bookmark?, p1: Bookmark?): Int {
@@ -24,7 +24,7 @@ private class MockBookmarkProvider : BookmarkProvider {
         TODO("Not yet implemented")
     }
 
-    override fun getProject(): Project {
+    override fun getProject(): com.intellij.openapi.project.Project {
         TODO("Not yet implemented")
     }
 
@@ -68,85 +68,102 @@ private class MockBookmark(override val attributes: Map<String, String>, overrid
 
 class BookmarksListenerTest : TestCase() {
 
-    private fun setupMock(): Pair<ActionQueries, JetmeilProject> {
-        val db = mock<ActionQueries>()
-        val project = JetmeilProject(1, ".", "github.com")
-        return Pair(db, project)
+    companion object {
+        const val DEFAULT_PROJECT_PATH = "."
+        const val DEFAULT_COMMIT_ID = "abc"
     }
-
-    fun testGroupRenamed() {
-        val (db, project) = setupMock()
-        val group = mock<BookmarkGroup>()
-        val bookMark = mock<Bookmark>()
-
-        whenever(group.name).thenReturn("group")
-        whenever(group.getBookmarks()).thenReturn(listOf(bookMark))
-        whenever(bookMark.attributes).thenReturn(mapOf("url" to "fn", "line" to "42"))
-
-        BookmarksListener(db, Main.gitter, project).groupRenamed(group)
-
-        verify(db).UpdateGroupName(group.name, project.project_id, "fn", 43)
-    }
-
-    fun testGroupRemoved() {
-        val (db, project) = setupMock()
-        val group = mock<BookmarkGroup>()
-
-        whenever(group.name).thenReturn("group")
-
-        BookmarksListener(db, Main.gitter, project).groupRemoved(group)
-
-        verify(db).RemoveByGroupName(group.name)
-    }
-
 
     data class TestCase(
         val testName: String,
         val setup: () -> Pair<
-                Tuple4<ActionQueries, JetmeilProject, BookmarkGroup, Bookmark>,
+                Tuple5<BookmarkRepository, GitCommander, List<Project>, BookmarkGroup, Bookmark>,
                     () -> Unit
                 >,
     )
+
+    private fun setupMock(): Pair<BookmarkRepository, List<Project>> {
+        val db = mock<BookmarkRepository>()
+        val project = Project(1, DEFAULT_PROJECT_PATH, "github.com")
+        return Pair(db, listOf(project))
+    }
+
+    private fun setupMockForGettingProject(): Triple<BookmarkGroup, Bookmark, com.intellij.openapi.project.Project> {
+        val group = mock<BookmarkGroup>()
+        val bookMark = mock<Bookmark>()
+        val bookmarkProvider = mock<BookmarkProvider>()
+        val project = mock<com.intellij.openapi.project.Project>()
+
+        whenever(group.getBookmarks()).thenReturn(listOf(bookMark))
+        whenever(bookMark.provider).thenReturn(bookmarkProvider)
+        whenever(bookmarkProvider.project).thenReturn(project)
+        whenever(project.basePath).thenReturn(DEFAULT_PROJECT_PATH)
+
+        return Triple(group, bookMark, project)
+    }
+
+    fun testGroupRenamed() {
+        val (db, projects) = setupMock()
+        val (group, bookMark) = setupMockForGettingProject()
+
+        whenever(group.name).thenReturn("group")
+        whenever(bookMark.attributes).thenReturn(mapOf("url" to "fn", "line" to "42"))
+
+        BookmarksListener(db, mock(), projects).groupRenamed(group)
+
+        verify(db).UpdateGroupName(group.name, 1, "fn", 43)
+    }
+
+    fun testGroupRemoved() {
+        val (db, projects) = setupMock()
+        val group = mock<BookmarkGroup>()
+
+        whenever(group.name).thenReturn("group")
+
+        BookmarksListener(db, mock(), projects).groupRemoved(group)
+
+        verify(db).RemoveByGroupName(group.name)
+    }
 
     fun testBookmarkAdded() {
         val testCases = mutableListOf(
             TestCase(
                 "Test Case 1: add bookmark",
             ) {
-                val (db, project) = setupMock()
-                val group = mock<BookmarkGroup>()
-                val bookMark = mock<Bookmark>()
+                val (db, projects) = setupMock()
+                val (group, bookMark, project) = setupMockForGettingProject()
+                val gitter = mock<GitCommander>()
 
                 whenever(group.name).thenReturn("group")
                 whenever(group.getDescription(bookMark)).thenReturn("des")
-                val commitID = getCurrentCommitID(project.project_path)
                 whenever(bookMark.attributes).thenReturn(mapOf("url" to "fn", "line" to "10"))
+                whenever(gitter.getCurrentCommitID(project.basePath!!)).thenReturn(DEFAULT_COMMIT_ID)
+
                 return@TestCase Pair(
-                    Tuple4(db, project, group, bookMark)
+                    Tuple5(db, gitter, projects, group, bookMark)
                 ) {
                     verify(db).UpsertBookmarkWithoutCommitID(
-                        project.project_id,
+                        1,
                         group.name,
                         group.getDescription(bookMark),
                         "fn",
                         11,
-                        commitID
+                        DEFAULT_COMMIT_ID
                     )
                 }
             },
             TestCase(
                 "Test Case 2: add group bookmark name",
             ) {
-                val (db, project) = setupMock()
-                val group = mock<BookmarkGroup>()
-                val bookMark = mock<Bookmark>()
+                val (db, projects) = setupMock()
+                val (group, bookMark) = setupMockForGettingProject()
 
                 whenever(group.name).thenReturn("group")
                 whenever(group.getDescription(bookMark)).thenReturn("des")
+
                 return@TestCase Pair(
-                    Tuple4(db, project, group, bookMark)
+                    Tuple5(db, mock(), projects, group, bookMark)
                 ) {
-                    verifyZeroInteractions(db)
+                    verifyNoInteractions(db)
                 }
             }
         )
@@ -156,7 +173,7 @@ class BookmarksListenerTest : TestCase() {
             val (mock, verify) = testCase.setup()
             println("Running test case: $testName")
 
-            BookmarksListener(mock.v1, Main.gitter, mock.v2).bookmarkAdded(mock.v3, mock.v4)
+            BookmarksListener(mock.v1, mock.v2, mock.v3).bookmarkAdded(mock.v4, mock.v5)
 
             verify()
         }
@@ -167,40 +184,41 @@ class BookmarksListenerTest : TestCase() {
             TestCase(
                 "Test Case 1: update bookmark",
             ) {
-                val (db, project) = setupMock()
-                val group = mock<BookmarkGroup>()
-                val bookMark = mock<Bookmark>()
+                val (db, projects) = setupMock()
+                val (group, bookMark, project) = setupMockForGettingProject()
+                val gitter = mock<GitCommander>()
 
                 whenever(group.name).thenReturn("group")
                 whenever(group.getDescription(bookMark)).thenReturn("des")
-                val commitID = getCurrentCommitID(project.project_path)
                 whenever(bookMark.attributes).thenReturn(mapOf("url" to "fn", "line" to "50"))
+                whenever(gitter.getCurrentCommitID(project.basePath!!)).thenReturn(DEFAULT_COMMIT_ID)
+
                 return@TestCase Pair(
-                    Tuple4(db, project, group, bookMark)
+                    Tuple5(db, gitter, projects, group, bookMark)
                 ) {
                     verify(db).UpsertBookmark(
-                        project.project_id,
+                        1,
                         group.name,
                         group.getDescription(bookMark),
                         "fn",
                         51,
-                        commitID
+                        DEFAULT_COMMIT_ID
                     )
                 }
             },
             TestCase(
                 "Test Case 2: update group bookmark name",
             ) {
-                val (db, project) = setupMock()
-                val group = mock<BookmarkGroup>()
-                val bookMark = mock<Bookmark>()
+                val (db, projects) = setupMock()
+                val (group, bookMark) = setupMockForGettingProject()
 
                 whenever(group.name).thenReturn("group")
                 whenever(group.getDescription(bookMark)).thenReturn("des")
+
                 return@TestCase Pair(
-                    Tuple4(db, project, group, bookMark)
+                    Tuple5(db, mock(), projects, group, bookMark)
                 ) {
-                    verifyZeroInteractions(db)
+                    verifyNoInteractions(db)
                 }
             }
         )
@@ -210,7 +228,7 @@ class BookmarksListenerTest : TestCase() {
             val (mock, verify) = testCase.setup()
             println("Running test case: $testName")
 
-            BookmarksListener(mock.v1, Main.gitter, mock.v2).bookmarkChanged(mock.v3, mock.v4)
+            BookmarksListener(mock.v1, mock.v2, mock.v3).bookmarkChanged(mock.v4, mock.v5)
 
             verify()
         }
@@ -221,27 +239,29 @@ class BookmarksListenerTest : TestCase() {
             TestCase(
                 "Test Case 1: remove bookmark",
             ) {
-                val (db, project) = setupMock()
-                val bookMark = mock<Bookmark>()
+                val (db, projects) = setupMock()
+                val (_, bookMark) = setupMockForGettingProject()
 
                 whenever(bookMark.attributes).thenReturn(mapOf("url" to "fn", "line" to "50"))
+
                 return@TestCase Pair(
-                    Tuple4(db, project, mock(), bookMark)
+                    Tuple5(db, mock(), projects, mock(), bookMark)
                 ) {
-                    verify(db).DeletedBookmark(project.project_id, "fn", 51)
+                    verify(db).DeletedBookmark(1, "fn", 51)
                 }
             },
             TestCase(
                 "Test Case 2: remove group bookmark",
             ) {
-                val (db, project) = setupMock()
-                val bookMark = mock<Bookmark>()
+                val (db, projects) = setupMock()
+                val (_, bookMark) = setupMockForGettingProject()
 
                 whenever(bookMark.attributes).thenReturn(mapOf("url" to "fn"))
+
                 return@TestCase Pair(
-                    Tuple4(db, project, mock(), bookMark)
+                    Tuple5(db, mock(), projects, mock(), bookMark)
                 ) {
-                    verifyZeroInteractions(db)
+                    verifyNoInteractions(db)
                 }
             },
         )
@@ -251,7 +271,7 @@ class BookmarksListenerTest : TestCase() {
             val (mock, verify) = testCase.setup()
             println("Running test case: $testName")
 
-            BookmarksListener(mock.v1, Main.gitter, mock.v2).bookmarkRemoved(mock.v3, mock.v4)
+            BookmarksListener(mock.v1, mock.v2, mock.v3).bookmarkRemoved(mock.v4, mock.v5)
 
             verify()
         }
@@ -271,8 +291,22 @@ class BookmarksListenerTest : TestCase() {
         }
     }
 
-    fun testGetCurrentCommitID() {
-        val currentCommitID = getCurrentCommitID(".")
-        assertTrue(currentCommitID.isNotEmpty())
+    fun testGetProjectByBookmark() {
+        // test case: project not found
+        val bookMark = mock<Bookmark>()
+        val bookmarkProvider = mock<BookmarkProvider>()
+        val project = mock<com.intellij.openapi.project.Project>()
+
+        whenever(bookMark.provider).thenReturn(bookmarkProvider)
+        whenever(bookmarkProvider.project).thenReturn(project)
+        whenever(project.basePath).thenReturn(DEFAULT_PROJECT_PATH)
+
+        try {
+            BookmarksListener(mock(), mock(), listOf(Project(1, "path", "github.com")))
+                .getProjectByBookmark(bookMark)
+            fail()
+        } catch (e: Exception) {
+            assertEquals(PROJECT_NOT_FOUND, e.message)
+        }
     }
 }

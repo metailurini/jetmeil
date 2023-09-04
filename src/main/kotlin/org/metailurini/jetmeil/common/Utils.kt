@@ -19,12 +19,5 @@ class Utils {
             }
             return lines.joinToString(" ")
         }
-
-        @JvmStatic
-        fun extractGitRemoteURL(input: String): String? {
-            val regex = Regex("([^/@ ]+/[^/ ]*/[^/ ]+) .[^()]*.")
-            val matchResult = regex.find(input)
-            return matchResult?.groups?.get(1)?.value
-        }
     }
 }

@@ -3,28 +3,20 @@ package org.metailurini.jetmeil.plugins.listener
 import com.intellij.ide.bookmark.Bookmark
 import com.intellij.ide.bookmark.BookmarkGroup
 import com.intellij.ide.bookmark.BookmarksListener
-import com.intellij.openapi.project.ProjectManager
-import org.metailurini.jetmeil.ActionQueries
 import org.metailurini.jetmeil.Project
 import org.metailurini.jetmeil.adapter.GitCommander
-import org.metailurini.jetmeil.common.Utils
-import org.metailurini.jetmeil.loadProject
+import org.metailurini.jetmeil.adapter.repository.BookmarkRepository
+
 
 open class BookmarksListener(
-    private var db: ActionQueries,
+    private var bookmarkRepo: BookmarkRepository,
     private var gitter: GitCommander,
-    private var initProject: Project?
+    private var projects: List<Project>
 ) :
     BookmarksListener {
-    private val project: Project
 
-    init {
-        if (initProject == null) {
-            ProjectManager.getInstance().openProjects[0].basePath?.let {
-                initProject = loadProject(db, gitter, it)
-            }
-        }
-        project = initProject as Project
+    companion object {
+        const val PROJECT_NOT_FOUND = "project not found"
     }
 
     override fun groupRenamed(group: BookmarkGroup) {
@@ -35,50 +27,60 @@ open class BookmarksListener(
 
         val bookmark = bookmarks[0]
         val newGroupName = group.name
-        val projectID = project.project_id
+        val projectID = getProjectByBookmark(bookmark).project_id
         val (fileURL, fileLine) = extractFileAndLineNum(bookmark)
 
-        db.UpdateGroupName(newGroupName, projectID, fileURL, fileLine)
+        bookmarkRepo.UpdateGroupName(newGroupName, projectID, fileURL, fileLine)
     }
 
     override fun groupRemoved(group: BookmarkGroup) {
-        db.RemoveByGroupName(group.name)
+        bookmarkRepo.RemoveByGroupName(group.name)
     }
 
     override fun bookmarkAdded(group: BookmarkGroup, bookmark: Bookmark) {
+        val project = getProjectByBookmark(bookmark)
         val projectID = project.project_id
         val groupName = group.name
         val description = group.getDescription(bookmark)
-        val commitID = getCurrentCommitID(project.project_path)
+        val commitID = gitter.getCurrentCommitID(project.project_path)
         val (fileURL, fileLine, isGroupBookmarkName) = extractFileAndLineNum(bookmark)
         if (isGroupBookmarkName) {
             return
         }
 
-        db.UpsertBookmarkWithoutCommitID(projectID, groupName, description, fileURL, fileLine, commitID)
+        bookmarkRepo.UpsertBookmarkWithoutCommitID(projectID, groupName, description, fileURL, fileLine, commitID)
     }
 
     override fun bookmarkChanged(group: BookmarkGroup, bookmark: Bookmark) {
+        val project = getProjectByBookmark(bookmark)
         val projectID = project.project_id
         val groupName = group.name
         val description = group.getDescription(bookmark)
-        val commitID = getCurrentCommitID(project.project_path)
+        val commitID = gitter.getCurrentCommitID(project.project_path)
         val (fileURL, fileLine, isGroupBookmarkName) = extractFileAndLineNum(bookmark)
         if (isGroupBookmarkName) {
             return
         }
 
-        db.UpsertBookmark(projectID, groupName, description, fileURL, fileLine, commitID)
+        bookmarkRepo.UpsertBookmark(projectID, groupName, description, fileURL, fileLine, commitID)
     }
 
     override fun bookmarkRemoved(group: BookmarkGroup, bookmark: Bookmark) {
-        val projectID = project.project_id
+        val projectID = getProjectByBookmark(bookmark).project_id
         val (fileURL, fileLine, isGroupBookmarkName) = extractFileAndLineNum(bookmark)
         if (isGroupBookmarkName) {
             return
         }
 
-        db.DeletedBookmark(projectID, fileURL, fileLine)
+        bookmarkRepo.DeletedBookmark(projectID, fileURL, fileLine)
+    }
+
+    internal fun getProjectByBookmark(bookmark: Bookmark): Project {
+        val filteredProjects = projects.filter { it.project_path == bookmark.provider.project.basePath }
+        if (filteredProjects.isEmpty()) {
+            throw Exception(PROJECT_NOT_FOUND)
+        }
+        return filteredProjects[0]
     }
 }
 
@@ -108,8 +110,4 @@ internal fun extractFileAndLineNum(bookmark: Bookmark): Triple<String, Long, Boo
     }
 
     return Triple(fileURL, fileLine, isGroupBookmarkName)
-}
-
-internal fun getCurrentCommitID(basePath: String): String {
-    return Utils.run(arrayOf("sh", "-c", "cd '${basePath}' && git rev-parse --short HEAD"))
 }

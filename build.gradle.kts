@@ -6,18 +6,18 @@ plugins {
 }
 
 group = "org.metailurini"
-version = "2.0"
+version = "2.1"
 
 repositories {
     mavenCentral()
 }
 dependencies {
     implementation("com.google.code.gson:gson:2.10")
-    implementation("org.junit.jupiter:junit-jupiter:5.8.1")
     implementation("com.squareup.sqldelight:sqlite-driver:1.5.5")
     implementation("com.squareup.sqldelight:coroutines-extensions:1.5.0")
-    implementation("org.mockito.kotlin:mockito-kotlin:3.2.0")
     implementation("org.xerial:sqlite-jdbc:3.41.2.2")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:5.1.0")
 }
 
 intellij {

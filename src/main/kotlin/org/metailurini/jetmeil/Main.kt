@@ -7,28 +7,27 @@ import com.intellij.openapi.startup.ProjectActivity
 import org.metailurini.jetmeil.adapter.DatabaseManager
 import org.metailurini.jetmeil.adapter.GitCommander
 import org.metailurini.jetmeil.adapter.GitCommanderImpl
+import org.metailurini.jetmeil.adapter.repository.BookmarkRepository
+import org.metailurini.jetmeil.adapter.repository.BookmarkRepositoryImpl
 import org.metailurini.jetmeil.plugins.listener.BookmarksListener
 import org.metailurini.jetmeil.plugins.svoice.Svoice
 import org.metailurini.jetmeil.plugins.svoice.SvoiceRepositoryImpl
 import org.metailurini.jetmeil.Project as JetmeilProject
 
 
-val ProjectNotFound = Exception("project not found")
-
 class Main {
     companion object {
         var svoice = Svoice(SvoiceRepositoryImpl())
-        var gitter = GitCommanderImpl()
-        var database = DatabaseManager.getActionQueries()
-        var jetmeilProject: JetmeilProject? = null
+        var gitter: GitCommander = GitCommanderImpl()
+        var bookmarkRepo: BookmarkRepository = BookmarkRepositoryImpl(DatabaseManager.getBookmarkQueries())
+        var projects: List<JetmeilProject> = listOf()
     }
 
-    class JetmeilBookMarks : BookmarksListener(database, gitter, jetmeilProject)
+    class JetmeilBookMarks : BookmarksListener(bookmarkRepo, gitter, getListProjects())
 
     class JetmeilPostStartupActivity : ProjectActivity {
         override suspend fun execute(project: Project) {
-            val basePath = project.basePath ?: return
-            loadProject(database, gitter, basePath)
+            upsertProject(project)
         }
     }
 
@@ -46,52 +45,30 @@ class Main {
 
 private operator fun Any.component0() {}
 
-internal fun loadProject(
-    database: ActionQueries,
-    gitter: GitCommander,
-    projectPath: String
-): org.metailurini.jetmeil.Project? {
-    var projectID: Long? = null
 
-    var project = database.GetProjectByPath(projectPath).executeAsOneOrNull()
-    if (project != null) {
-        projectID = project.project_id
-    }
-
-    val githubLink = gitter.getRemoteURL(projectPath)
-    database.UpsertProject(
-        project_id = projectID,
-        project_path = projectPath,
-        github_link = githubLink
-    )
-
-    project = database.GetProjectByPath(projectPath).executeAsOneOrNull()
-    if (project == null) {
-        throw ProjectNotFound
-    }
-
-    Main.jetmeilProject = project
-    return Main.jetmeilProject
+fun getListProjects(): List<JetmeilProject> {
+    if (Main.projects.isEmpty())
+        Main.projects = Main.bookmarkRepo.getProjects()
+    return Main.projects
 }
 
-/*
-                      +-----+      +-----------+
-                      | APP | ---> | MIGRATION |
-                      +-----+      +-----------+
-                                        |
-                    +---------+         |
-               +----| SQLITE3 | <-------+
-               |    +---------+
-               |         |
-               |         |
-               |         v
-               |    +------------+------------+--[BOOKMARK]-+-----------+-------------+-----------+          | e.groupRenamed -> update group name for whole project
-               |    | project_id | group_name | description | file_path | line_number | commit_id |  <-------| e.groupRemoved -> remove by group name
-               |    +------------+------------+-------------+-----------+-------------+-----------+          | e.bookmarkAdded -> insert bookmark
-               |          |   \____________________(PK)_________|____________/                               | e.bookmarkChanged -> update bookmark
-               |          |
-               |          v
-               |    +------------+---[PROJECT]--+--------------+-------------+
-               +--> | project_id | project name | project_path | github_link |
-                    +------------+--------------+--------------+-------------+
-*/
+fun upsertProject(project: Project) {
+    // set empty project for reset projects list for bookmarks listener
+    Main.projects = listOf()
+
+    project.basePath?.let { projectPath ->
+        val githubLink = Main.gitter.getRemoteURL(projectPath)
+        var projectID: Long? = null
+        val exisingProjects = Main.bookmarkRepo.getProjectsByPath(projectPath)
+
+        if (exisingProjects.isNotEmpty()) {
+            projectID = exisingProjects[0].project_id
+        }
+
+        Main.bookmarkRepo.UpsertProject(
+            project_id = projectID,
+            project_path = projectPath,
+            github_link = githubLink
+        )
+    }
+}

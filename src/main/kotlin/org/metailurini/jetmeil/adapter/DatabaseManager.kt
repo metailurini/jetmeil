@@ -2,7 +2,7 @@ package org.metailurini.jetmeil.adapter
 
 import com.squareup.sqldelight.db.SqlDriver
 import com.squareup.sqldelight.sqlite.driver.JdbcSqliteDriver
-import org.metailurini.jetmeil.ActionQueries
+import org.metailurini.jetmeil.BookmarkQueries
 import org.metailurini.jetmeil.Database
 import org.sqlite.SQLiteException
 
@@ -26,8 +26,8 @@ class DatabaseManager private constructor() {
             }
         }
 
-        fun getActionQueries(): ActionQueries {
-            return getInstance().database.actionQueries
+        fun getBookmarkQueries(): BookmarkQueries {
+            return getInstance().database.bookmarkQueries
         }
     }
 
