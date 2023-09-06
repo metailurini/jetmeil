@@ -11,6 +11,7 @@ version = "2.1.1"
 repositories {
     mavenCentral()
 }
+
 dependencies {
     implementation("com.google.code.gson:gson:2.10")
     implementation("com.squareup.sqldelight:coroutines-extensions:1.5.0")
@@ -21,7 +22,7 @@ dependencies {
 }
 
 intellij {
-    version.set("2023.2.1")
+    version.set("2023.1.1")
     type.set("IC")
 
     plugins.set(listOf())
@@ -37,7 +38,7 @@ tasks {
     }
 
     patchPluginXml {
-        sinceBuild.set("232")
+        sinceBuild.set("231")
         untilBuild.set("232.*")
     }
 
